@@ -1,0 +1,2 @@
+FunctionID,FunctionName,Dim,Algorithm,Runs,MaxIters,PopOrSwarm,Mean,Std,Best,Worst
+F6,Shifted Rosenbrock,10,GA,15,500,40,532134.280825682,386685.669886224,94162.9783621363,1327149.15627908

@@ -1,0 +1,2 @@
+FunctionID,FunctionName,Dim,Algorithm,Runs,MaxIters,PopOrSwarm,Mean,Std,Best,Worst
+F9,Shifted Rastrigin,10,GA,15,500,40,-304.444116041357,7.4500375632668,-315.046676396622,-284.729813475154
