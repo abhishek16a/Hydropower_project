@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Files included in head -->
+  <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<meta http-equiv="Content-Security-Policy" content="default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;">
+<base href="https://www.dhm.gov.np/">
+<meta name="google-site-verification" content="ATc5VPM4Fx28uSJ-EeZ_xZr-XVctcGoCu-p7aRZha6w" />
+<link href="https://fonts.googleapis.com/css?family=Nunito|Nunito+Sans&display=swap" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="https://www.dhm.gov.np/assets/frontend/slick/slick.css" />
+<link rel="stylesheet" type="text/css" href="https://www.dhm.gov.np/assets/frontend/slick/slick-theme.css" />
+<link rel="stylesheet" type="text/css" href="https://www.dhm.gov.np/assets/icons/icon.css" />
+<title>DHM</title>
+<link rel="shortcut icon" type="image/x-icon" href="https://www.dhm.gov.np/assets/frontend/assets/images/new_logo.png">
+<link href="https://www.dhm.gov.np/assets/frontend/style.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://www.dhm.gov.np/assets/frontend/custom.css">
+
+<link rel="stylesheet" type="text/css" href="https://www.dhm.gov.np/assets/frontend/leaflet.css">
+<link href="https://www.dhm.gov.np/assets/frontend/select2.min.css" rel="stylesheet" />
+<link href="https://www.dhm.gov.np/assets/cdn/jquery.dataTables.min.css" rel="stylesheet" />
+<!-- Bootstrap datepicker-->
+<link href="https://www.dhm.gov.np/assets/vendors/bootstrap_datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://www.dhm.gov.np/assets/mfd_datepicker/css/bootstrap-datepicker.min.css">
+<link rel="stylesheet" href="https://www.dhm.gov.np/assets/mfd_datepicker/css/bootstrap-datepicker1.min.css">
+<script src="https://www.dhm.gov.np/assets/frontend/js/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript" src="https://www.dhm.gov.np/assets/vendors/bootstrap_datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+
+
+<style>
+    #map1 {
+        height: 400px
+    }
+
+    #map2 {
+        height: 400px
+    }
+
+    #map3 {
+        height: 400px
+    }
+</style>  <!-- End Files included in head -->
+</head>
+
+
+<body>
+
+
+  <!-- Modal -->
+  
+  
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Forecasting</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="mapmodal"></div>
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Close
+          </button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="surfaceModal" style="height:400px;position:absolute;overflow:unset">
+    <div class=" modal-dialog modal-dialog-centered" style="max-width: 600px">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title"></h4>
+          <button type="button" class="close" data-dismiss="modal" id="FILE_CLOSE">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="rainfallModal">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:700px;height:500px;">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title"></h4>
+
+          <button type="button" class="close" data-dismiss="modal" id="FILE_CLOSE_RAINFALL">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div id="rainfall_modal_body">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="forecastModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="max-width: 1000px;height:530px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="foremodal"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div id="app">
+
+    <!-- Header files -->
+    <header class="header" style="background-image: url(https://www.dhm.gov.np/assets/frontend/assets/images/headerbg.png)">
+  <img src="https://www.dhm.gov.np/assets/frontend/assets/images/headerbg.png" class="d-none" />
+  <a class="header-logo" href="https://www.dhm.gov.np/">
+    <div class="align-vertical">
+      <img src="https://www.dhm.gov.np/assets/frontend/assets/images/new_logo.png" alt="logo" class="logo" />
+
+      <div class="header-title">
+        <h6 class="font-weight-bold mb-1">Government of Nepal</h6>
+        <h6 class="font-weight-medium mb-1">
+          Ministry of Energy, Water Resources and Irrigation        </h6>
+        <h6 class="font-weight-normal">
+          Department of Hydrology and Meteorology        </h6>
+      </div>
+    </div>
+  </a>
+
+  <div class="header-action">
+    <div class="align-vertical">
+      <div class="search">
+        <i class="ic-search" id="searchButton"></i>
+
+        <div class="card-01">
+          <form action="search" method="post">
+            <div class="form-group-icon">
+              <input type="search" name="search" class="form-control form-control-sm" />
+              <i class="ic-search text-light"></i>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="header-social">
+                              <a href="https://www.instagram.com/dhm_weather/" class="ic-instagram" target="_blank">
+            </a>
+                          <!-- <a href="" class="ic-facebook"></a>
+                <a href="" class="ic-twitter"></a> -->
+      </div>
+      <div class="play header-alert ring alert_bell" id="play-pause" style="display:none">
+        <img src="https://www.dhm.gov.np/assets/frontend/assets/images/bell-solid.svg" alt="">
+        <img src="https://www.dhm.gov.np/assets/frontend/assets/images/bell-slash-solid.svg" alt="">
+      </div>
+    </div>
+    <div class="align-vertical">
+      <div class="header-date">
+                <span class="font-weight-medium">
+          Tuesday        </span>
+        <span>
+          26 Aug, 2025        </span>
+      </div>
+            <div class="header-language">
+        <a href="https://www.dhm.gov.np/bhasa/meteorology-forecast_4/en" class="btn
+                    active">EN
+        </a>
+        <a href="https://www.dhm.gov.np/bhasa/meteorology-forecast_4/np" class="btn
+                    ">नेप
+        </a>
+      </div>
+      <button class="btn btn-primary sideToggler btn-sm ic-menu"></button>
+    </div>
+  </div>
+</header>
+
+<div id="jpId"></div>
+    <!-- End Header files -->
+
+
+    <div class="layout">
+      <!-- Sidebar -->
+      <aside class="aside">
+    <div class="position-relative h-100">
+        <div class="scrollable-container">
+            <ul class="list nav-external mb-4">     
+                <li>
+                    <a href="https://www.dhm.gov.np/meteorology-forecast/3">
+                        <img src="https://www.dhm.gov.np/assets/frontend/assets/images/icon-meteorology.png"
+                            alt="title" class="icon" />
+                        <span>Meteorological Observations</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.dhm.gov.np/meteorology-forecast/4">
+                        <img src="https://www.dhm.gov.np/assets/frontend/assets/images/icon-meteorology.png"
+                            alt="title" class="icon" />
+                        <span>Meteorological Forecast</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.dhm.gov.np/meteorology-forecast/1">
+                        <img src="https://www.dhm.gov.np/assets/frontend/assets/images/icon-hydrology.png"
+                            alt="title" class="icon" />
+                        <span>Hydrological Observations</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.dhm.gov.np/meteorology-forecast/2">
+                        <img src="https://www.dhm.gov.np/assets/frontend/assets/images/icon-hydrology.png"
+                            alt="title" class="icon" />
+                        <span>Hydrological Forecast</span>
+                    </a>
+                </li>
+            </ul>
+            <ul class="list nav-basic">
+            <li>                
+                <a href="https://www.dhm.gov.np/" class=""><span>Home</span></a>
+            </li>
+                                    <!-- Parent  -->
+                                                                        <li>
+                                                                    <a data-toggle="collapse" class="hasSub" href="#collapse180" aria-expanded="false" aria-controls="collapse180"><span>About Us</span></a>
+
+                                    <div class="collapse" id="collapse180">
+                                        <ul class="list list-nested pl-3">
+                                                                                                                                            <li>
+                                                                                                            <a href="https://www.dhm.gov.np/pages/about-us" class=""><span>Introduction</span></a>
+                                                                                                    </li>
+                                                                                                                                            <li>
+                                                                                                            <a href="https://www.dhm.gov.np/organizational-chart" class=""><span>Organizational Structure</span></a>
+                                                                                                    </li>
+                                                                                                                                            <li>
+                                                                                                            <a href="https://www.dhm.gov.np/citizen-charter" class=""><span>Citizen Charter</span></a>
+                                                                                                    </li>
+                                                                                                                                            <li>
+                                                                                                            <a href="https://www.dhm.gov.np/gallery" class=""><span>Photo Gallery</span></a>
+                                                                                                    </li>
+                                                                                                                                            <li>
+                                                                                                            <a href="https://www.dhm.gov.np/regional-office" class=""><span>Regional Offices</span></a>
+                                                                                                    </li>
+                                                                                                                                            <li>
+                                                                                                            <a href="https://www.dhm.gov.np/who-is-who" class=""><span>Staff</span></a>
+                                                                                                    </li>
+                                                                                    </ul>
+                                    </div>
+                                                            </li>
+                                                                        <li>
+                                                                                                        
+                                    <a href="https://www.dhm.gov.np/pressrelease" class=""><span>Press Release</span></a>   
+                                                            </li>
+                                                                        <li>
+                                                                                                        
+                                    <a href="https://www.dhm.gov.np/publication" class=""><span>Publications</span></a>   
+                                                            </li>
+                                                                        <li>
+                                                                    <a data-toggle="collapse" class="hasSub" href="#collapse327" aria-expanded="false" aria-controls="collapse327"><span>Services</span></a>
+
+                                    <div class="collapse" id="collapse327">
+                                        <ul class="list list-nested pl-3">
+                                                                                                                                            <li>
+                                                                                                            <a href="https://www.dhm.gov.np/climate-services" class=""><span>Climate Services</span></a>
+                                                                                                    </li>
+                                                                                                                                            <li>
+                                                                                                            <a href="https://www.dhm.gov.np/agromet-services" class=""><span>Agromet Services</span></a>
+                                                                                                    </li>
+                                                                                                                                            <li>
+                                                                                                            <a href="https://www.dhm.gov.np/pages/instrumentation-services" class=""><span>Instrumentation Services</span></a>
+                                                                                                    </li>
+                                                                                    </ul>
+                                    </div>
+                                                            </li>
+                                                                        <li>
+                                                                                                        
+                                    <a href="https://www.dhm.gov.np/tender" class=""><span>Tenders</span></a>   
+                                                            </li>
+                                                                        <li>
+                                                                                                        
+                                    <a href="https://www.dhm.gov.np/notice" class=""><span>Notices</span></a>   
+                                                            </li>
+                                                                        <li>
+                                                                                                        
+                                    <a href="https://www.dhm.gov.np/bulletins" class=""><span>Bulletin</span></a>   
+                                                            </li>
+                                                                        <li>
+                                                                                                        
+                                    <a href="https://www.dhm.gov.np/downloads" class=""><span>Downloads</span></a>   
+                                                            </li>
+                                                                        <li>
+                                                                                                        
+                                    <a href="https://www.dhm.gov.np/audio" class=""><span>Audio Visual</span></a>   
+                                                            </li>
+                                                                        <li>
+                                                                                                        
+                                    <a href="https://www.dhm.gov.np/feedback" class=""><span>Feedback</span></a>   
+                                                            </li>
+                                                                        <li>
+                                                                                                        
+                                    <a href="https://www.dhm.gov.np/project" class=""><span>Projects</span></a>   
+                                                            </li>
+                                                                        <li>
+                                                                                                        
+                                    <a href="https://www.dhm.gov.np/sop" class=""><span>SOP</span></a>   
+                                                            </li>
+                                                                        <li>
+                                                                                                        
+                                    <a href="https://www.dhm.gov.np/survey" class=""><span>Survey</span></a>   
+                                                            </li>
+                                                                        <li>
+                                                                                                        
+                                    <a href="http://103.1.92.71/dhm/lms/opac_css" class=""><span>Library</span></a>   
+                                                            </li>
+                                                    
+                                            
+                <!-- <li class="meteorological_obs_item" style="display: none">                
+                    <a href="https://www.dhm.gov.np/" class=""><span>Observation Surface</span></a>
+                </li>
+                <li class="meteorological_obs_item" style="display: none">                
+                    <a href="https://www.dhm.gov.np/" class=""><span>Weather Radar</span></a>
+                </li>
+                <li class="meteorological_obs_item" style="display: none">                
+                    <a href="https://www.dhm.gov.np/" class=""><span>Lightning</span></a>
+                </li> -->
+            </ul>
+        </div>
+    </div>
+</aside>
+
+<script>
+    $(document).ready(function(){
+        // $(document).off('click','#meteorological_obs').on('click','#meteorological_obs',function(e) {
+        //     e.preventDefault();
+
+        //     $(".meteorological_obs_item").toggle();
+        // });
+    });
+</script>      <!-- End Sidebar -->
+
+      <main>
+
+        <!-- Marquee -->
+        <div class="newsbar-container">
+        
+</div>        <!-- End Marquee -->
+
+        <div class="position-relative flex-grow-1">
+          <div class="scrollable-container">
+            <!-- Main page -->
+            <div>
+  <link rel="stylesheet" type="text/css" href="https://www.dhm.gov.np/assets/custom/css/survey.css">
+
+  <style>
+    .custom-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-column-gap: 1.5rem;
+      grid-row-gap: 1.5rem;
+    }
+
+    @media screen and (max-width:960px) {
+      .custom-row {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+    }
+
+    @media screen and (max-width:620px) {
+      .custom-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .card-06 {
+      position: relative;
+      padding: 1rem;
+      box-shadow: 0px 2px 4px rgba(10, 10, 10, 0.16);
+      transition: all ease-in 0.2s;
+      border-radius: 2px;
+      display: block;
+      position: relative;
+      background-color: white;
+      height: 100%;
+    }
+
+    .card-06:before {
+      content: "";
+      width: 4px;
+      height: 100%;
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      border-radius: 0 0 2px 2px;
+      background-color: var(--color-secondary);
+      ;
+
+    }
+
+    .card-06 h6 {
+
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-secondary);
+
+    }
+
+    .card-06 p {
+
+      font-size: 12px;
+      color: #777777;
+
+    }
+
+    .card-06 .icon {
+
+      font-size: 2rem;
+      color: var(--color-secondary);
+
+    }
+
+    .card-06:hover {
+      box-shadow: 0px 2px 16px rgba(10, 10, 10, 0.16);
+    }
+  </style>
+                <section class="content-header d-flex justify-content-between align-items-center">
+                      <h6 class="mt-3 pb-2 heading-main" style="padding-left:20px;">
+              General Forecast            </h6>
+                  </section>
+        <section class="content p-3">
+          <div class="custom-row">
+                          <div class="grid-3">
+                <a href="https://dhm.gov.np/mfd/#/weather/fog" class="card-06">
+                  <div class="textbox">
+                    <h6>Fog Monitoring and Outlook</h6>
+                    <p>Meteorological Forecast</p>
+                  </div>
+                </a>
+              </div>
+                          <div class="grid-3">
+                <a href="  https://dhm.gov.np/mfd/#/weather/pages/weekly-weather-outlook  " class="card-06">
+                  <div class="textbox">
+                    <h6>Weekly Weather Outlook</h6>
+                    <p>Meteorological Forecast</p>
+                  </div>
+                </a>
+              </div>
+                          <div class="grid-3">
+                <a href="https://www.dhm.gov.np/integrated-test/#/integrated-weather" class="card-06">
+                  <div class="textbox">
+                    <h6>Tourism Forecast</h6>
+                    <p>Meteorological Forecast</p>
+                  </div>
+                </a>
+              </div>
+                          <div class="grid-3">
+                <a href="https://www.dhm.gov.np/mfd1/ibf     " class="card-06">
+                  <div class="textbox">
+                    <h6>Impact Based Forecasting</h6>
+                    <p>Meteorological Forecast</p>
+                  </div>
+                </a>
+              </div>
+                          <div class="grid-3">
+                <a href="https://dhm.gov.np/mfd/#/weather/aviation" class="card-06">
+                  <div class="textbox">
+                    <h6>Aviation Meteorology</h6>
+                    <p>Meteorological Forecast</p>
+                  </div>
+                </a>
+              </div>
+                          <div class="grid-3">
+                <a href="https://dhm.gov.np/mfd/#/weather/mountaineering " class="card-06">
+                  <div class="textbox">
+                    <h6>Mountaineering</h6>
+                    <p>Meteorological Forecast</p>
+                  </div>
+                </a>
+              </div>
+                          <div class="grid-3">
+                <a href="https://dhm.gov.np/mfd/#/weather/three-days-bulletin" class="card-06">
+                  <div class="textbox">
+                    <h6>Three day Forecast</h6>
+                    <p>Meteorological Forecast</p>
+                  </div>
+                </a>
+              </div>
+                          <div class="grid-3">
+                <a href="https://dhm.gov.np/mfd/#/weather/city" class="card-06">
+                  <div class="textbox">
+                    <h6>Urban Meteorology</h6>
+                    <p>Meteorological Forecast</p>
+                  </div>
+                </a>
+              </div>
+                          <div class="grid-3">
+                <a href="https://www.dhm.gov.np/mfd1/fog-forecast   " class="card-06">
+                  <div class="textbox">
+                    <h6>Fog Forecast</h6>
+                    <p>Meteorological Forecast</p>
+                  </div>
+                </a>
+              </div>
+                          <div class="grid-3">
+                <a href="https://dhm.gov.np/mfd/#/weather/pages/special-weather" class="card-06">
+                  <div class="textbox">
+                    <h6>Special Weather Forecast</h6>
+                    <p>Meteorological Forecast</p>
+                  </div>
+                </a>
+              </div>
+                      </div>
+          <br />
+        </section>
+              <section class="content-header d-flex justify-content-between align-items-center">
+                      <h6 class="mt-3 pb-2 heading-main" style="padding-left:20px;">
+              RealTime Forecast            </h6>
+                  </section>
+        <section class="content p-3">
+          <div class="custom-row">
+                          <div class="grid-3">
+                <a href="   https://dhm.gov.np/mfd/#/weather/pages/weather-warning" class="card-06">
+                  <div class="textbox">
+                    <h6>Weather Warnings</h6>
+                    <p>Meteorological Forecast</p>
+                  </div>
+                </a>
+              </div>
+                          <div class="grid-3">
+                <a href="https://www.dhm.gov.np/mfd1/city-forecast  " class="card-06">
+                  <div class="textbox">
+                    <h6>NWP based City Forecast</h6>
+                    <p>Meteorological Forecast</p>
+                  </div>
+                </a>
+              </div>
+                          <div class="grid-3">
+                <a href="https://dhm.gov.np/mfd/#/nwp " class="card-06">
+                  <div class="textbox">
+                    <h6>Model Forecast</h6>
+                    <p>Meteorological Forecast</p>
+                  </div>
+                </a>
+              </div>
+                          <div class="grid-3">
+                <a href="https://www.dhm.gov.np/mfd1/highway    " class="card-06">
+                  <div class="textbox">
+                    <h6>Highway Weather</h6>
+                    <p>Meteorological Forecast</p>
+                  </div>
+                </a>
+              </div>
+                      </div>
+          <br />
+        </section>
+      </div>            <!-- End main page -->
+            <!-- Footer -->
+            <footer class="footer-home">
+  <div class="container footer-container">
+    <div class="row">
+      <div class="col-md-5 col-xxl-3">
+        <div class="footer-logo mb-3">
+
+          <img src="https://www.dhm.gov.np/assets/frontend/assets/images/gov-logo.png" alt class=" img-fluid" />
+          <div class="">
+            <p>Government of Nepal</p>
+            <span class="font-weight-bold">Ministry of Energy, Water Resources and Irrigation</span>
+            <span>Department of Hydrology and Meteorology</span>
+          </div>
+        </div>
+
+        <ul class="list footer-contactList mt-2">
+          <li>
+            <i class="ic-location"></i>
+                          <a href>Babarmahal, Kathmandu, Nepal</a>
+                      </li>
+          <li>
+            <i class="ic-call"></i>
+                          <a href="tel:+977- 1- 5319052, 5358224, 5358276, 5319007">
+              <span+977- 1- 5319052, 5358224">+977- 1- 5319052,  5358224</span></br><span 5358276, 5319007"> 5358276,  5319007</span>
+              </a>
+                      </li>
+          <li style="display:none">
+            <i class="ic-fax"></i>
+                          <a href>+977 1</a>
+          </li>
+          <li style="display:none">
+            <i class="ic-mail"></i>
+            <a href> dg@dhm.gov.np</a>
+                    </li>
+        </ul>
+      </div>
+      <div class="col-md-7 col-xxl-5 mt-4 mt-md-0">
+        <div class="row">
+          <div class="col-7">
+            <h6 class="footer-title text-center mb-3">
+              Spokesperson            </h6>
+            <a href="https://www.dhm.gov.np/profile/29">
+              <div class="avatar avatar-xl mx-auto mb-3">
+                <img src="https://www.dhm.gov.np/uploads/dhm/members/विभूति_पोखरेल.jpg" alt />
+              </div>
+            </a> 
+            <div class="textbox-04">
+                              <h6>Bibhuti Pokharel</h6>
+                            <span class="d-flex justify-content-center">
+                                                    <i class="ic-call" style="margin-right: 3px !important;"></i>  <a href>9863477915</a>
+                              </span>
+              <i class="ic-mail"></i> <a href style="font-size: 11px; !important;">dhm.spokesperson@gmail.com</a>
+            </div>
+          </div>
+          <div class="col-5">
+            <h6 class="footer-title text-center mb-3">
+              Information Officer            </h6>
+            <a href="https://www.dhm.gov.np/profile/28">
+            <div class="avatar avatar-xl mx-auto mb-3">
+              <img src="https://www.dhm.gov.np/uploads/dhm/members/info_officer.jpg" alt />
+            </div>
+            </a>
+            <div class="textbox-04">
+                              <h6>Dinkar Kayastha</h6>
+              
+
+              <span class="d-flex justify-content-center">
+               
+                                    <i class="ic-call"  style="margin-right: 3px !important;"></i>  <a href>9863477916</a>
+                              </span>
+              <i class="ic-mail"></i> <a href style="font-size: 11px; !important;">info@dhm.gov.np</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 mt-5 mt-xxl-0">
+        <h2 class="footer-title mb-3">Useful Links</h2>
+
+        <ul class="list footer-list">
+                                                    <li>
+                  <a href="http://www.mfd.gov.np/" target="_blank">
+                    Weather Forecasting                  </a>
+                </li>
+                                                        <li>
+                  <a href="https://moewri.gov.np/" target="_blank">
+                    Ministry of Energy, Water Resources and Irrigation                  </a>
+                </li>
+                                                        <li>
+                  <a href="http://old.dhm.gov.np" target="_blank">
+                    DHM(Old Site)                  </a>
+                </li>
+                                                        <li>
+                  <a href="http://hydrology.gov.np/#/?_k=nfc63d" target="_blank">
+                    Hydrology(Old Site)                  </a>
+                </li>
+                                                        <li>
+                  <a href="http://mfd.gov.np/" target="_blank">
+                    MFD(Old Site)                  </a>
+                </li>
+                                                        <li>
+                  <a href="https://www.dhm.gov.np/gbiaa/" target="_blank">
+                    Gautam Buddha International Airport Aero-synoptic Station                  </a>
+                </li>
+                                    
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-copyright">
+    Copyright © Department Of Hydrology and Meteorology, 2025  </div>
+</footer>            <!-- Footer end -->
+
+          </div>
+        </div>
+      </main>
+
+      <!-- Sidebar feeds -->
+      <div class="feed-media show">
+    <div class=" position-relative h-100">
+        <div class="scrollable-container">
+            <div class="feed-section">
+                <div class="mb-3">
+                    <div class="d-flex">
+                        <div class="avatar avatar-xl mr-2">
+  <a href="https://www.dhm.gov.np/profile/27">
+                        <div class="avatar avatar-xl mr-2">
+                            <img src="https://www.dhm.gov.np/uploads/dhm/members/कमलराम_जोशी_।.jpg"
+                                alt="">
+                        </div>
+                    </a>  
+                        </div>
+                        <div class="textbox-01">
+                                                            <h6>Kamal Ram Joshi</h6>
+                                                                                    <p>Director General</p>
+                            <p>Email: <a href="">dg@dhm.gov.np</a></p>
+                            <!-- <a href="" class="link">More >></a> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                  <h6 class="heading-01 mb-2">SATELLITE IMAGES</h6>
+                  <a href="https://www.dhm.gov.np/mfd1/satellite?satellite=1&&category=1&&subcategory=1">
+                    <div class="satellite-carousel">
+                                          </div>
+                  </a>
+                </div>
+             <!--   <div class="mb-3">
+                    <h6 class="heading-01 mb-2">Video Feeds</h6>
+                    <img src="https://www.dhm.gov.np/assets/frontend/assets/images/satellite.png" alt
+                        class="img-fluid w-100" />
+                </div> -->
+                <div class="mb-3 d-none">
+                <div class="mb-3 ">
+                    <h6 class="heading-01 mb-2">Tweets</h6>
+                    <a class="twitter-timeline" data-width="100%" data-height="300" data-theme="light"
+                        href="https://mobile.twitter.com/NepalDhm">Tweets by DHM</a>
+                </div>
+                <div class="mb-3 d-none">
+                    <h6 class="heading-01 mb-2">Facebook</h6>
+                    <iframe
+                        src="https://www.facebook.com/dhm.nepal.5/"
+                        width="100%" height="300" style="border:none;overflow:hidden" scrolling="no"
+                        frameborder="0" allowfullscreen="true"
+                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    if ($(".satellite-carousel")) {
+      $(".satellite-carousel").slick({
+        arrows: false,
+        dots: true,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: false,
+        infinite: true,
+        speed: 300,
+      });
+    }
+  });
+</script>      <!-- End sidebar feeds -->
+
+      <button class="btn btn-primary btn-feed">
+      </button>
+
+      <!--Modal Section -->
+      <!-- Modal -->
+      <div class="modal fade" id="requestDataModal" tabindex="-1" role="dialog" aria-labelledby="requestDataModalModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="requestDataModalModalLabel">Request Data</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form action="https://www.dhm.gov.np/frontend_dhm/site/addRequest" class="form-group" id="add_form" method="POST" enctype="multipart/form-data" accept-charset="utf-8">
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="" class="d-block form-label">Occupation</label>
+                <div class="form-row">
+                  <div class="col-lg-4">
+
+                    <div class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" id="customRadioInline1" name="occupation" class="custom-control-input" value="1">
+                      <label class="custom-control-label" for="customRadioInline1">Student</label>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" id="customRadioInline2" name="occupation" class="custom-control-input" value="2">
+                      <label class="custom-control-label" for="customRadioInline2">Government Office</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="col-lg-4">
+                    <div class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" id="customRadioInline3" name="occupation" class="custom-control-input" value="3">
+                      <label class="custom-control-label" for="customRadioInline3">Individual Researcher</label>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" id="customRadioInline4" name="occupation" class="custom-control-input" value="4">
+                      <label class="custom-control-label" for="customRadioInline4">NGO / INGO</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group" id="sort_by" style="display: none;">
+                <label for="" class="d-block form-label">Sort By</label>
+                <div class="custom-control custom-radio">
+                  <input type="radio" id="customRadioInline5" name="sort_by" class="custom-control-input" value="1">
+                  <label class="custom-control-label" for="customRadioInline5">Nepali student in Nepal</label>
+                </div>
+                <div class="custom-control custom-radio">
+                  <input type="radio" id="customRadioInline6" name="sort_by" class="custom-control-input" value="2">
+                  <label class="custom-control-label" for="customRadioInline6">Nepali student in foreign
+                    university</label>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="full_name" class="form-label">Full Name</label>
+                    <input type="text" name="full_name" class="form-control">
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" name="email" class="form-control">
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="phone_no" class="form-label">Phone No.</label>
+                    <input type="text" name="phone_no" class="form-control">
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="institute_name" class="form-label">Institute Name</label>
+                    <input type="text" name="institute_name" class="form-control">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="" class="form-label">Upload Documents</label>
+                <div class="align-start justify-content-between">
+                  <div class="ml-3">
+                    <input type="file" name="citizenship" />
+                    <!-- <label for="file-upload" class="btn btn-primary">Browse</label> -->
+                  </div>
+                </div>
+                <div class="align-start justify-content-between mt-2">
+                  <div class="ml-3">
+                    <input type="file" name="perposal" />
+                    <!-- <label for="file-upload" class="btn btn-primary">Browse</label> -->
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="purpose" class="form-label">Purpose</label>
+                <textarea class="form-control" name="purpose" id="" rows="3">
+                        </textarea>
+              </div>
+            </div>
+            <div class="modal-footer d-block">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="accept" name="accept" value="1">
+                <label class="custom-control-label" for="accept">I accept these terms and conditions.</label>
+              </div>
+              <div>
+                <div class="align-vertical justify-content-end mt-3">
+                  <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" id="submit_button" class="btn btn-primary ml-2" disabled>Request Data</button>
+                </div>
+              </div>
+            </div>
+
+            </form>          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script async src="https://www.dhm.gov.np/assets/frontend/js/widgets.js" charset="utf-8"></script>
+<script type="text/javascript" src="https://www.dhm.gov.np/assets/frontend/assets/vendors.js"></script>
+<script type="text/javascript" src="https://www.dhm.gov.np/assets/frontend/assets/home.js"></script>
+<script type="text/javascript" src="https://www.dhm.gov.np/assets/frontend/slick/slick.js"></script>
+<!-- Datetimepicker-->
+<script src="https://www.dhm.gov.np/assets/frontend/_js/bootstrap-datetimepicker.min.js"></script>
+<!-- script for the map of offices -->
+<script>
+  $(document).ready(function() {
+    let newsList = document.querySelectorAll(".newsbar-list li");
+    if (newsList.length > 0) {
+      var i = newsList.length;
+
+      var timer = setInterval(() => {
+        var index = i % newsList.length;
+        toggleBox(index);
+        i++;
+      }, 1500);
+
+      function toggleBox(index) {
+        newsList.forEach(function(item) {
+          if (item.classList.contains("show")) {
+            item.classList.remove("show");
+          }
+        });
+        newsList[index].classList.add("show");
+      }
+      newsList.forEach(function(item) {
+        item.addEventListener("mouseover", function() {
+          clearInterval(timer);
+        });
+        item.addEventListener("mouseleave", function() {
+          timer = setInterval(() => {
+            var index = i % newsList.length;
+            toggleBox(index);
+            i++;
+          }, 1500);
+        });
+      });
+    }
+
+    if ($(".instrument-carousel")) {
+      $(".instrument-carousel").slick({
+        arrows: true,
+        dots: false,
+        slidesToShow: 4,
+        slidesToScroll: 4,
+        autoplay: false,
+        infinite: false,
+        nextArrow: document.getElementById('btn-next'),
+        prevArrow: document.getElementById('btn-prev'),
+        responsive: [{
+            breakpoint: 992,
+            settings: {
+              slidesToShow: 4,
+              slidesToScroll: 4,
+            }
+          },
+          {
+            breakpoint: 720,
+            settings: {
+              slidesToShow: 3,
+              slidesToScroll: 1,
+            },
+
+          },
+          {
+            breakpoint: 576,
+            settings: {
+              slidesToShow: 2,
+              slidesToScroll: 1,
+            }
+          }
+        ]
+
+
+      });
+    }
+
+    $('.datepicker').datepicker({
+      format: "yyyy-mm-dd",
+      autoclose: true
+    });
+
+    $('.datetimepicker').datetimepicker({
+      pickTime: false,
+      minView: 'month',
+      endDate: new Date()
+    }).on('changeDate', function(ev) {
+      $('.datepicker').datetimepicker('hide');
+    });
+
+  });
+</script>
+<!-- script for the map of offices end -->  <!-- End scripts -->
+</body>
+</html>
